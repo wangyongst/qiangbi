@@ -43,4 +43,12 @@ public class SmvcipApi {
             output.close();
         }
     }
+
+    public String login(String username,String password,String code) throws Exception {
+       return EntityUtils.toString(httpClientUtil.login(username,password,code).getEntity(), "UTF-8");
+    }
+
+    public String refresh() throws IOException {
+        return EntityUtils.toString(httpClientUtil.get("https://www.smcvip.com/Works/IBOT").getEntity(),"UTF-8");
+    }
 }
