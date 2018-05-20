@@ -28,14 +28,17 @@ public class HttpClientUtil {
 
     public HttpResponse get(String url) throws IOException {
         HttpGet httpGet = new HttpGet(url);
-//        HttpHost proxy=new HttpHost("60.184.173.200", 8070);
-//        RequestConfig requestConfig=RequestConfig.custom().setProxy(proxy).build();
-//        httpGet.setConfig(requestConfig);
+        HttpHost proxy=new HttpHost("49.51.231.179", 1080);
+        RequestConfig requestConfig=RequestConfig.custom().setProxy(proxy).build();
+        httpGet.setConfig(requestConfig);
         return httpClient.execute(httpGet);
     }
 
     public HttpResponse login(String username,String password,String vcode) throws IOException {
         HttpPost httpPost = new HttpPost("https://www.smcvip.com/index.php/login/logincl");
+        HttpHost proxy=new HttpHost("49.51.231.179", 1080);
+        RequestConfig requestConfig=RequestConfig.custom().setProxy(proxy).build();
+        httpPost.setConfig(requestConfig);
         //设置参数
         List<NameValuePair> list = new ArrayList<NameValuePair>();
         Iterator iterator = loginMap(username,password,vcode).entrySet().iterator();
