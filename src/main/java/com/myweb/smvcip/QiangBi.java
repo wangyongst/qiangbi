@@ -12,6 +12,9 @@ import java.io.IOException;
 
 public class QiangBi {
     public static void main(String[] args){
+//        System.getProperties().setProperty("proxySet", "true");
+//        System.getProperties().setProperty("http.proxyHost", "60.184.173.200");
+//        System.getProperties().setProperty("http.proxyPort", "8070");
         SmvcipApi smvcipApi = null;
         try {
             smvcipApi = new SmvcipApi();
