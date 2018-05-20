@@ -4,6 +4,7 @@ package com.myweb.smvcip;
 import net.sourceforge.tess4j.ITesseract;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.util.ImageHelper;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -60,7 +61,7 @@ public class QiangBi {
 
             if (str4nu.length() != 4) continue;
             String loginResult = smvcipApi.login("rlh003", "yhxt123456", str4nu);
-            if (!loginResult.contains("验证码不正确")) {
+            if (StringUtils.isNotBlank(loginResult) &&!loginResult.contains("验证码不正确")) {
                 return true;
             }
         }
