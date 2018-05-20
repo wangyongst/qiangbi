@@ -1,8 +1,10 @@
 package com.myweb.smvcip;
 
+import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -26,6 +28,9 @@ public class HttpClientUtil {
 
     public HttpResponse get(String url) throws IOException {
         HttpGet httpGet = new HttpGet(url);
+//        HttpHost proxy=new HttpHost("60.184.173.200", 8070);
+//        RequestConfig requestConfig=RequestConfig.custom().setProxy(proxy).build();
+//        httpGet.setConfig(requestConfig);
         return httpClient.execute(httpGet);
     }
 
