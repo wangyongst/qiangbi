@@ -44,6 +44,11 @@ public class HttpClientUtil {
         return httpClient.execute(httpGet);
     }
 
+    public HttpResponse get(String url) throws IOException {
+        HttpGet httpGet = new HttpGet(url);
+        return httpClient.execute(httpGet);
+    }
+
     public HttpResponse login(String username,String password,String vcode,RequestConfig requestConfig) throws IOException {
         HttpPost httpPost = new HttpPost("https://www.smcvip.com/index.php/login/logincl");
         httpPost.setConfig(requestConfig);
@@ -61,6 +66,21 @@ public class HttpClientUtil {
         return httpClient.execute(httpPost);
     }
 
+    public HttpResponse login(String username,String password,String vcode) throws IOException {
+        HttpPost httpPost = new HttpPost("https://www.smcvip.com/index.php/login/logincl");
+        //设置参数
+        List<NameValuePair> list = new ArrayList<NameValuePair>();
+        Iterator iterator = loginMap(username,password,vcode).entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<String, String> elem = (Map.Entry<String, String>) iterator.next();
+            list.add(new BasicNameValuePair(elem.getKey(), elem.getValue()));
+        }
+        if (list.size() > 0) {
+            UrlEncodedFormEntity entity = new UrlEncodedFormEntity(list);
+            httpPost.setEntity(entity);
+        }
+        return httpClient.execute(httpPost);
+    }
 
     public Map loginMap(String username,String password,String code) {
         Map<String, String> createMap = new HashMap<String, String>();

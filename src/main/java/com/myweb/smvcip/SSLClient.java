@@ -21,7 +21,6 @@ import java.security.cert.X509Certificate;
 public class SSLClient {
     public static CloseableHttpClient SslHttpClientBuild() {
         Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create().register("http", PlainConnectionSocketFactory.INSTANCE).register("https", trustAllHttpsCertificates()).build();
-        //创建ConnectionManager，添加Connection配置信息
         PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
         CloseableHttpClient httpClient = HttpClients.custom().setConnectionManager(connectionManager).build();
         return httpClient;
