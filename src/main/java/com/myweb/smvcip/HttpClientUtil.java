@@ -1,17 +1,29 @@
 package com.myweb.smvcip;
 
 import org.apache.http.HttpHost;
+import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.HttpContext;
+import org.apache.http.util.EntityUtils;
 
+import javax.swing.text.html.parser.Entity;
 import java.io.IOException;
 import java.util.*;
+
+import static gnu.cajo.utils.CodebaseServer.port;
 
 /*
  * 利用HttpClient进行post请求的工具类
@@ -26,18 +38,14 @@ public class HttpClientUtil {
         }
     }
 
-    public HttpResponse get(String url) throws IOException {
+    public HttpResponse get(String url,RequestConfig requestConfig) throws IOException {
         HttpGet httpGet = new HttpGet(url);
-        HttpHost proxy=new HttpHost("80.211.182.207", 8888);
-        RequestConfig requestConfig=RequestConfig.custom().setProxy(proxy).build();
         httpGet.setConfig(requestConfig);
         return httpClient.execute(httpGet);
     }
 
-    public HttpResponse login(String username,String password,String vcode) throws IOException {
+    public HttpResponse login(String username,String password,String vcode,RequestConfig requestConfig) throws IOException {
         HttpPost httpPost = new HttpPost("https://www.smcvip.com/index.php/login/logincl");
-        HttpHost proxy=new HttpHost("80.211.182.207", 8888);
-        RequestConfig requestConfig=RequestConfig.custom().setProxy(proxy).build();
         httpPost.setConfig(requestConfig);
         //设置参数
         List<NameValuePair> list = new ArrayList<NameValuePair>();
