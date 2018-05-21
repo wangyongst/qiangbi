@@ -13,11 +13,18 @@ import java.util.Date;
 
 public class Refresh {
     public static boolean refresh(RefreshApi refreshApi, String username, String password) throws Exception {
-        if (!isLogin(refreshApi, username, password)) return false;
+      //  if (!isLogin(refreshApi, username, password)) return false;
         while (true) {
             Thread.sleep(100);
             long start = new Date().getTime();
-            System.out.println(refreshApi.refresh());
+            String resout = refreshApi.refresh();
+            if(resout.contains("买入")) {
+                System.out.println(refreshApi.refresh());
+                return true;
+            }else if(resout.contains("验证码")){
+                System.out.println(refreshApi.refresh());
+                return false;
+            }
             long end = new Date().getTime();
             System.out.println("账号 " + username + " 刷新成功，用时 " + (end - start) + "ms");
         }
@@ -25,8 +32,8 @@ public class Refresh {
 
     public static boolean isLogin(RefreshApi refreshApi, String username, String password) throws Exception {
         while (true) {
-            Thread.sleep(100);
             String name = refreshApi.getCode();
+            Thread.sleep(100);
             if (name.equals("403")) return false;
             File imgFile = new File("C:\\imgs\\refresh\\" + name + ".png");
             ITesseract instance = new Tesseract();
@@ -44,6 +51,7 @@ public class Refresh {
             if (str4nu.length() != 4) continue;
             // String loginResult = smvcipApi.login("rlh003", "yhxt123456", str4nu);
             String loginResult = refreshApi.login(username, password, str4nu);
+            Thread.sleep(100);
             if (loginResult.equals("403")) return false;
             if (StringUtils.isNotBlank(loginResult) && !loginResult.contains("验证码不正确")) {
                 return true;

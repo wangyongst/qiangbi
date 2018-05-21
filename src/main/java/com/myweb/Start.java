@@ -5,33 +5,41 @@ import com.myweb.smvcip.QiangBi;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 public class Start {
-    private static final int MAX_THREADS = 100;
+    private static final int MAX_THREADS = 10;
     // public static final int SLEEP = 2000;
     public static ExecutorService executorService = Executors.newFixedThreadPool(MAX_THREADS);
 
     public static void main(String[] args) throws Exception {
-
-        System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.SimpleLog");
-        System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
-        System.setProperty("org.apache.commons.logging.simplelog.log.httpclient.wire", "ERROR");
-        System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http", "ERROR");
-        System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http.headers", "ERROR");
-
-        boolean isMainLogin = QiangBi.mainLogin("rlh003", "yhxt123456");
-        while (!isMainLogin) {
-            isMainLogin = QiangBi.mainLogin("rlh003", "yhxt123456");
-        }
+//        boolean isMainLogin = QiangBi.mainLogin("rlh003", "yhxt123456");
+//        while (!isMainLogin) {
+//            //isMainLogin = QiangBi.mainLogin("rlh003", "yhxt123456");
+//            System.exit(1);
+//        }
         Account.getAccount().forEach((k, v) -> {
-            try {
-                Thread.sleep(30);
-            } catch (InterruptedException e1) {
-                e1.printStackTrace();
-            }
             executorService.execute(new Thread(() -> {
-                QiangBi.refresh(k, v);
+                boolean out = QiangBi.refreshLogin(k, v);
+                while (!out) {
+                    out = QiangBi.refreshLogin(k, v);
+                }
             }));
         });
+
+        while (true) {
+            if (executorService.isTerminated()) {
+                Account.getAccount().forEach((k, v) -> {
+                    executorService.execute(new Thread(() -> {
+                        boolean out = QiangBi.refresh(k, v);
+                        while (!out) {
+                            out = QiangBi.refresh(k, v);
+                        }
+                        System.out.println("刷出来了！！！");
+                    }));
+                });
+                break;
+            }
+        }
     }
 }

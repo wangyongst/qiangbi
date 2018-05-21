@@ -52,7 +52,7 @@ public class RefreshApi {
         return EntityUtils.toString(httpResponse.getEntity(), "UTF-8");
     }
 
-    public String refresh() throws IOException {
+    public String refresh() throws Exception {
         HttpResponse httpResponse = httpClientUtil.get("https://www.smcvip.com/Works/IBOT", ProxyUtils.makeRequestConfig());
         if (httpResponse.getStatusLine().getStatusCode() != 200) return String.valueOf(httpResponse.getStatusLine().getStatusCode());
         return EntityUtils.toString(httpResponse.getEntity(), "UTF-8");

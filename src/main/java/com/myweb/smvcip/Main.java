@@ -14,7 +14,6 @@ public class Main {
 
     public static boolean isLogin(MainApi mainApi) throws Exception {
         while (true) {
-            Thread.sleep(100);
             String name = mainApi.getCode();
             if (name.equals("403")) return false;
             File imgFile = new File("C:\\imgs\\main\\" + name + ".png");
