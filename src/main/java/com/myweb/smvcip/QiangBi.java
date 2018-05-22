@@ -13,41 +13,48 @@ public class QiangBi {
                 return false;
             }
         } catch (Exception e) {
-            System.out.println("抢购账号：" + username + " 登录失败！");
+           e.printStackTrace();
             return false;
         }
         System.out.println("抢购账号：" + username + " 登录成功！");
         return true;
     }
 
-    public static boolean refreshLogin(String username, String password) {
+    public static boolean isLogin(String username, String password) {
+        boolean refreshLogin = false;
         try {
             RefreshApi refreshApi = new RefreshApi();
-            boolean isLogin = Refresh.isLogin(refreshApi, username, password);
-            while (!isLogin) {
+           refreshLogin = Refresh.isLogin(refreshApi, username, password);
+            if(!refreshLogin) {
                 System.out.println("刷新账号：" + username + " 登录失败，程序将自动重新登录！");
-                isLogin = Refresh.isLogin(refreshApi, username, password);
             }
         } catch (Exception e) {
-            System.out.println("刷新账号：" + username + " 登录失败，程序将自动重新登录！");
             return false;
         }
         System.out.println("刷新账号：" + username + " 登录成功！");
-        return true;
+        return refreshLogin;
     }
 
     public static boolean refresh(String username, String password) {
+        boolean refresh = false;
         try {
             RefreshApi refreshApi = new RefreshApi();
-            boolean refresh = Refresh.refresh(refreshApi, username, password);
-            while (!refresh) {
+            refresh = Refresh.refresh(refreshApi, username, password);
+            if (!refresh) {
                 System.out.println("刷新账号：" + username + " 刷新失败，程序将自动重新刷新！");
-                refresh = Refresh.refresh(refreshApi, username, password);
             }
         } catch (Exception e) {
-            System.out.println("刷新账号：" + username + " 刷新失败，程序将自动重新刷新！");
-            return false;
+            return true;
         }
-        return true;
+        return refresh;
+    }
+
+
+    public static void letGo(String username, String password) {
+        boolean login = false;
+        while (true) {
+            while (!login) login = isLogin(username, password);
+            login = refresh(username, password);
+        }
     }
 }

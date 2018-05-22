@@ -38,9 +38,9 @@ public class SSLClient {
             socketFactory = new SSLConnectionSocketFactory(sc, NoopHostnameVerifier.INSTANCE);
             //HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+           // e.printStackTrace();
         } catch (KeyManagementException e) {
-            e.printStackTrace();
+           // e.printStackTrace();
         }
         return socketFactory;
     }

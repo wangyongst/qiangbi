@@ -2,14 +2,15 @@ package com.myweb;
 
 import com.myweb.smvcip.Account;
 import com.myweb.smvcip.QiangBi;
+import com.myweb.smvcip.refresh.Refresh;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 public class Start {
-    private static final int MAX_THREADS = 10;
-    // public static final int SLEEP = 2000;
+    private static final int MAX_THREADS = 1;
+    public static final int SLEEP = 200;
     public static ExecutorService executorService = Executors.newFixedThreadPool(MAX_THREADS);
 
     public static void main(String[] args) throws Exception {
@@ -19,27 +20,14 @@ public class Start {
 //            System.exit(1);
 //        }
         Account.getAccount().forEach((k, v) -> {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             executorService.execute(new Thread(() -> {
-                boolean out = QiangBi.refreshLogin(k, v);
-                while (!out) {
-                    out = QiangBi.refreshLogin(k, v);
-                }
+                QiangBi.letGo(k, v);
             }));
         });
-
-        while (true) {
-            if (executorService.isTerminated()) {
-                Account.getAccount().forEach((k, v) -> {
-                    executorService.execute(new Thread(() -> {
-                        boolean out = QiangBi.refresh(k, v);
-                        while (!out) {
-                            out = QiangBi.refresh(k, v);
-                        }
-                        System.out.println("刷出来了！！！");
-                    }));
-                });
-                break;
-            }
-        }
     }
 }

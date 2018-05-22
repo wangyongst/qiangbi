@@ -15,7 +15,7 @@ public class Main {
     public static boolean isLogin(MainApi mainApi) throws Exception {
         while (true) {
             String name = mainApi.getCode();
-            if (name.equals("403")) return false;
+            if (name.equals("403")) continue;
             File imgFile = new File("C:\\imgs\\main\\" + name + ".png");
             ITesseract instance = new Tesseract();
             BufferedImage bi = ImageIO.read(imgFile);
@@ -32,7 +32,7 @@ public class Main {
             if (str4nu.length() != 4) continue;
             // String loginResult = smvcipApi.login("rlh003", "yhxt123456", str4nu);
             String loginResult = mainApi.login(mainApi.getUsername(), mainApi.getPassword(), str4nu);
-            if (loginResult.equals("403")) return false;
+            if (loginResult.equals("403")) continue;
             if (StringUtils.isNotBlank(loginResult) && !loginResult.contains("验证码不正确")) {
                 return true;
             }

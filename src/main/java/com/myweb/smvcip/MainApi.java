@@ -16,7 +16,7 @@ public class MainApi {
     private String password;
 
     public MainApi(String username, String password) throws Exception {
-        this.httpClientUtil = new HttpClientUtil();
+        this.httpClientUtil = HttpClientUtil.getHttpClientUtil();
         this.username = username;
         this.password = password;
     }

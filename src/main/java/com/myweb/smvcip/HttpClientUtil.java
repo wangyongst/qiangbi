@@ -30,15 +30,26 @@ import static gnu.cajo.utils.CodebaseServer.port;
  */
 public class HttpClientUtil {
 
-    public HttpClient httpClient;
+    private HttpClient httpClient = SSLClient.SslHttpClientBuild();
+    private static HttpClientUtil httpClientUtil = null;
 
-    public HttpClientUtil() throws Exception {
-        if (httpClient == null) {
-            httpClient = SSLClient.SslHttpClientBuild();
-        }
+    private HttpClientUtil() {
+
     }
 
-    public HttpResponse get(String url,RequestConfig requestConfig) throws IOException {
+
+    public static HttpClientUtil getHttpClientUtil() throws Exception {
+        if (httpClientUtil == null) {
+            synchronized (HttpClientUtil.class) {
+                if (httpClientUtil == null) {//2
+                    httpClientUtil = new HttpClientUtil();
+                }
+            }
+        }
+        return httpClientUtil;
+    }
+
+    public HttpResponse get(String url, RequestConfig requestConfig) throws IOException {
         HttpGet httpGet = new HttpGet(url);
         httpGet.setConfig(requestConfig);
         return httpClient.execute(httpGet);
@@ -49,12 +60,12 @@ public class HttpClientUtil {
         return httpClient.execute(httpGet);
     }
 
-    public HttpResponse login(String username,String password,String vcode,RequestConfig requestConfig) throws IOException {
+    public HttpResponse login(String username, String password, String vcode, RequestConfig requestConfig) throws IOException {
         HttpPost httpPost = new HttpPost("https://www.smcvip.com/index.php/login/logincl");
         httpPost.setConfig(requestConfig);
         //设置参数
         List<NameValuePair> list = new ArrayList<NameValuePair>();
-        Iterator iterator = loginMap(username,password,vcode).entrySet().iterator();
+        Iterator iterator = loginMap(username, password, vcode).entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<String, String> elem = (Map.Entry<String, String>) iterator.next();
             list.add(new BasicNameValuePair(elem.getKey(), elem.getValue()));
@@ -66,11 +77,11 @@ public class HttpClientUtil {
         return httpClient.execute(httpPost);
     }
 
-    public HttpResponse login(String username,String password,String vcode) throws IOException {
+    public HttpResponse login(String username, String password, String vcode) throws IOException {
         HttpPost httpPost = new HttpPost("https://www.smcvip.com/index.php/login/logincl");
         //设置参数
         List<NameValuePair> list = new ArrayList<NameValuePair>();
-        Iterator iterator = loginMap(username,password,vcode).entrySet().iterator();
+        Iterator iterator = loginMap(username, password, vcode).entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<String, String> elem = (Map.Entry<String, String>) iterator.next();
             list.add(new BasicNameValuePair(elem.getKey(), elem.getValue()));
@@ -82,7 +93,7 @@ public class HttpClientUtil {
         return httpClient.execute(httpPost);
     }
 
-    public Map loginMap(String username,String password,String code) {
+    public Map loginMap(String username, String password, String code) {
         Map<String, String> createMap = new HashMap<String, String>();
         createMap.put("__TOKEN__", "");
         createMap.put("account", username);

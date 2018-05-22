@@ -16,13 +16,15 @@ public class RefreshApi {
     private HttpClientUtil httpClientUtil = null;
 
     public RefreshApi() throws Exception {
-        httpClientUtil = new HttpClientUtil();
+        httpClientUtil = HttpClientUtil.getHttpClientUtil();
     }
 
     public String getCode() throws Exception {
         String name = String.valueOf(new Date().getTime());
         HttpResponse httpResponse = httpClientUtil.get("https://www.smcvip.com/index.php/login/verify", ProxyUtils.makeRequestConfig());
-        if (httpResponse.getStatusLine().getStatusCode() != 200) return String.valueOf(httpResponse.getStatusLine().getStatusCode());
+        if (httpResponse.getStatusLine().getStatusCode() != 200){
+            return String.valueOf(httpResponse.getStatusLine().getStatusCode());
+        }
         File fileDir = new File("C:\\imgs\\refresh");
         if (!fileDir.exists()) {
             fileDir.mkdirs();
