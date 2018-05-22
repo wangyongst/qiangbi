@@ -25,8 +25,7 @@ public class Refresh {
             }
             if (resout.contains("买入")) {
                 System.out.println(resout);
-            } else if (resout.contains("/index.php/login/logincl")) {
-                System.out.println(resout);
+            } else if (resout.contains("/index.php/login/logincl") && resout.contains("请输入登陆账号")) {
                 return false;
             }
             long end = new Date().getTime();
