@@ -19,16 +19,16 @@ public class Start {
 
     public static void main(String[] args) {
 
-        boolean isMainLogin = QiangBi.mainLogin("rlh003", "yhxt123456");
+        //boolean isMainLogin = QiangBi.mainLogin("rlh003", "yhxt123456");
 
-//        Account.getAccount().forEach((k, v) -> {
-//            if (time >= Proxys.size) time = 0;
-//            Timer timer = new Timer();
-//            timer.setTime(time);
-//            executorService.execute(new Thread(() -> {
-//                Refresh refresh = new Refresh(k,v,timer.getTime());
-//               new QiangBi().letGo(refresh);
-//            }));
-//        });
+        Account.getAccount().forEach((k, v) -> {
+            if (time >= Proxys.size) time = 0;
+            Timer timer = new Timer();
+            timer.setTime(time);
+            executorService.execute(new Thread(() -> {
+                Refresh refresh = new Refresh(k,v,timer.getTime());
+               new QiangBi().letGo(refresh);
+            }));
+        });
     }
 }

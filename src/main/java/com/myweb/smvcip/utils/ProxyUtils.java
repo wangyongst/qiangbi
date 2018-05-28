@@ -15,7 +15,7 @@ import java.util.Date;
 
 public class ProxyUtils {
     private long time = 0;
-    private long offet = 0;
+    private long offet = 300000;
     private RequestConfig requestConfig;
     public String ip;
     public int port;
@@ -28,9 +28,9 @@ public class ProxyUtils {
 
     public RequestConfig makeRequestConfig() throws Exception {
         if (new Date().getTime() > time + offet || out) {
-           // getIP();
-            ip="222.64.33.247";
-            port=9797;
+           getIP();
+            //ip="222.64.33.247";
+            //port=9797;
             time = new Date().getTime();
             requestConfig = createRequestConfig();
             out = false;
@@ -40,7 +40,7 @@ public class ProxyUtils {
 
     private void getIP() throws Exception {
         CloseableHttpClient hc = HttpClients.createDefault();
-        HttpGet httpGet = new HttpGet("http://api.ip.data5u.com/dynamic/get.html?order=1bba62a4564617691a6bfae7dec87141&sep=3&ttl=true");
+        HttpGet httpGet = new HttpGet("http://webapi.http.zhimacangku.com/getip?num=1&type=1&pro=0&city=0&yys=0&port=1&time=1&ts=0&ys=0&cs=0&lb=4&sb=0&pb=4&mr=1&regions=");
         HttpResponse httpResponse = hc.execute(httpGet);
         httpGet.setConfig(requestConfig);
         while (httpResponse.getStatusLine().getStatusCode() != 200) {
@@ -55,7 +55,7 @@ public class ProxyUtils {
         String reust = reusts.split("\n")[size];
         ip = reust.split(":")[0];
         port = Integer.parseInt(reust.split(":")[1].split(",")[0].trim());
-        offet = Long.parseLong(reust.split(":")[1].split(",")[1].trim());
+       // offet = Long.parseLong(reust.split(":")[1].split(",")[1].trim());
     }
 
 
