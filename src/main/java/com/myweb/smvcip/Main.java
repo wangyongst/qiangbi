@@ -9,16 +9,17 @@ import org.apache.commons.lang3.StringUtils;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.InputStream;
 
 public class Main {
 
     public static boolean isLogin(MainApi mainApi) throws Exception {
         while (true) {
-            String name = mainApi.getCode();
-            if (name.equals("403")) continue;
-            File imgFile = new File("C:\\imgs\\main\\" + name + ".png");
+            InputStream imgInput = mainApi.getCode();
+            if (imgInput == null) continue;
             ITesseract instance = new Tesseract();
-            BufferedImage bi = ImageIO.read(imgFile);
+            BufferedImage bi = ImageIO.read(imgInput);
+            imgInput.close();
             BufferedImage textImage = ImageHelper.convertImageToGrayscale(ImageHelper.getSubImage(bi, 0, 0, bi.getWidth(), bi.getHeight()));
             textImage = ImageHelper.convertImageToBinary(textImage);
             textImage = ImageHelper.getScaledInstance(textImage, bi.getWidth() * 20, bi.getHeight() * 20);
@@ -30,11 +31,12 @@ public class Main {
                 }
             }
             if (str4nu.length() != 4) continue;
-            // String loginResult = smvcipApi.login("rlh003", "yhxt123456", str4nu);
             String loginResult = mainApi.login(mainApi.getUsername(), mainApi.getPassword(), str4nu);
             if (loginResult.equals("403")) continue;
             if (StringUtils.isNotBlank(loginResult) && !loginResult.contains("验证码不正确")) {
                 return true;
+            }else{
+                System.out.println("登录失败，验证码识别不正确！");
             }
         }
     }

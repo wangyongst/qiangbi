@@ -51,8 +51,8 @@ dependencies {
 
     compile('org.apache.httpcomponents:httpclient')
 
-    compile group: 'net.sourceforge.tess4j', name: 'tess4j', version: '3.4.8'
+    compile group: 'net.sourceforge.tess4j', name: 'tess4j', version: '4.0.2'
 
-}
+    }
 
 

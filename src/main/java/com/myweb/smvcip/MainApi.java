@@ -1,12 +1,10 @@
 package com.myweb.smvcip;
 
+import com.myweb.smvcip.utils.HttpClientUtil;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 
@@ -16,40 +14,26 @@ public class MainApi {
     private String password;
 
     public MainApi(String username, String password) throws Exception {
-        this.httpClientUtil = HttpClientUtil.getHttpClientUtil();
+        this.httpClientUtil = new HttpClientUtil();
         this.username = username;
         this.password = password;
     }
 
-    public String getCode() throws Exception {
-        String name = String.valueOf(new Date().getTime());
-        HttpResponse httpResponse = httpClientUtil.get("https://www.smcvip.com/index.php/login/verify");
-        if (httpResponse.getStatusLine().getStatusCode() != 200) return String.valueOf(httpResponse.getStatusLine().getStatusCode());
-        File fileDir = new File("C:\\imgs\\main");
-        if (!fileDir.exists()) {
-            fileDir.mkdirs();
+    public InputStream getCode() throws Exception {
+        HttpResponse httpResponse = httpClientUtil.get("https://www.smcvip.com/index.php/login/verify", null);
+        if (httpResponse.getStatusLine().getStatusCode() != 200) {
+            return null;
         }
-        File imgFile = new File("C:\\imgs\\main\\" + name + ".png");
-        if (!imgFile.exists()) {
-            imgFile.createNewFile();
-        }
-        FileOutputStream output = new FileOutputStream(imgFile);
         HttpEntity entity = httpResponse.getEntity();
-        if (entity != null) {
+        if (entity != null && entity.getContentType().getValue().equals("image/png")) {
             InputStream instream = entity.getContent();
-            byte b[] = new byte[1024];
-            int j = 0;
-            while ((j = instream.read(b)) != -1) {
-                output.write(b, 0, j);
-            }
-            output.flush();
-            output.close();
+            return instream;
         }
-        return name;
+        return null;
     }
 
     public String login(String username, String password, String code) throws Exception {
-        HttpResponse httpResponse = httpClientUtil.login(username, password, code);
+        HttpResponse httpResponse = httpClientUtil.login(username, password, code, null);
         if (httpResponse.getStatusLine().getStatusCode() != 200) return String.valueOf(httpResponse.getStatusLine().getStatusCode());
         return EntityUtils.toString(httpResponse.getEntity(), "UTF-8");
     }

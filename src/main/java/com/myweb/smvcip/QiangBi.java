@@ -2,9 +2,12 @@ package com.myweb.smvcip;
 
 
 import com.myweb.smvcip.refresh.Refresh;
-import com.myweb.smvcip.refresh.RefreshApi;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class QiangBi {
+    private boolean need = true;
 
     public static boolean mainLogin(String username, String password) {
         try {
@@ -13,48 +16,78 @@ public class QiangBi {
                 return false;
             }
         } catch (Exception e) {
-           e.printStackTrace();
             return false;
         }
         System.out.println("抢购账号：" + username + " 登录成功！");
         return true;
     }
 
-    public static boolean isLogin(String username, String password) {
-        boolean refreshLogin = false;
+    public void login(Refresh refresh) {
+        int isLogin = 0;
         try {
-            RefreshApi refreshApi = new RefreshApi();
-           refreshLogin = Refresh.isLogin(refreshApi, username, password);
-            if(!refreshLogin) {
-                System.out.println("刷新账号：" + username + " 登录失败，程序将自动重新登录！");
-            }
+            isLogin = refresh.login();
         } catch (Exception e) {
-            return false;
+            return;
         }
-        System.out.println("刷新账号：" + username + " 登录成功！");
-        return refreshLogin;
+        if (printCode(isLogin)) return;
+        else if (isLogin == 9) {
+            System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + " 刷新账号：" + refresh.getUsername() + " 登录成功！");
+            need = false;
+            return;
+        } else if (isLogin == 2) {
+            System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + " 刷新账号：" + refresh.getUsername() + " 频繁操作！");
+            return;
+        } else if (isLogin == 3) {
+            System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + " 刷新账号：" + refresh.getUsername() + " 验证码识别失败！");
+            return;
+        }
+        return;
     }
 
-    public static boolean refresh(String username, String password) {
-        boolean refresh = false;
+    public void refresh(Refresh refresh) {
+        int ref = 0;
+        long start = new Date().getTime();
         try {
-            RefreshApi refreshApi = new RefreshApi();
-            refresh = Refresh.refresh(refreshApi, username, password);
-            if (!refresh) {
-                System.out.println("刷新账号：" + username + " 刷新失败，程序将自动重新刷新！");
-            }
+            ref = refresh.refresh();
         } catch (Exception e) {
+            return;
+        }
+        if (printCode(ref)) return;
+        else if (ref == 1) {
+            long end = new Date().getTime();
+            System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + " 刷新账号：" + refresh.getUsername() + " 刷新成功，用时 " + (end - start) + "ms");
+            return;
+        } else if (ref == 2) {
+            System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + " 刷新账号：" + refresh.getUsername() + " 频繁操作！");
+            return;
+        } else if (ref == 3) {
+            System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + " 刷新账号：" + refresh.getUsername() + " 需要重新登录！");
+            need = true;
+            return;
+        } else if (ref == 9) {
+            System.out.println("qiang dao le !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        }
+        return;
+    }
+
+    public static boolean printCode(int code) {
+        if (code == 403) {
+            System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + " 代理IP地址被禁");
             return true;
         }
-        return refresh;
+        if (code == 302) {
+            System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + " 对方服务器异常");
+            return true;
+        }
+        return false;
     }
 
 
-    public static void letGo(String username, String password) {
-        boolean login = false;
+    public void letGo(Refresh refresh) {
         while (true) {
-            while (!login) login = isLogin(username, password);
-            login = refresh(username, password);
+            if (need) {
+                login(refresh);
+            } else refresh(refresh);
         }
     }
 }

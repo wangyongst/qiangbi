@@ -1,5 +1,6 @@
-package com.myweb.smvcip;
+package com.myweb.smvcip.utils;
 
+import org.apache.http.client.CookieStore;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
@@ -7,6 +8,8 @@ import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.DefaultConnectionKeepAliveStrategy;
+import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 
@@ -19,10 +22,13 @@ import java.security.cert.X509Certificate;
 
 //用于进行Https请求的HttpClient
 public class SSLClient {
-    public static CloseableHttpClient SslHttpClientBuild() {
+    public static CloseableHttpClient SslHttpClientBuild(CookieStore cookieStore) {
         Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create().register("http", PlainConnectionSocketFactory.INSTANCE).register("https", trustAllHttpsCertificates()).build();
         PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
         CloseableHttpClient httpClient = HttpClients.custom().setConnectionManager(connectionManager).build();
+//                .setKeepAliveStrategy(new DefaultConnectionKeepAliveStrategy())
+//                .setRedirectStrategy(new DefaultRedirectStrategy())
+//                .setDefaultCookieStore(cookieStore).setConnectionManager(connectionManager).build();
         return httpClient;
     }
 
@@ -38,9 +44,9 @@ public class SSLClient {
             socketFactory = new SSLConnectionSocketFactory(sc, NoopHostnameVerifier.INSTANCE);
             //HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
         } catch (NoSuchAlgorithmException e) {
-           // e.printStackTrace();
+            // e.printStackTrace();
         } catch (KeyManagementException e) {
-           // e.printStackTrace();
+            // e.printStackTrace();
         }
         return socketFactory;
     }
