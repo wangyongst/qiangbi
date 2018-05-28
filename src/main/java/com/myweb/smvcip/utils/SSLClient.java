@@ -25,10 +25,10 @@ public class SSLClient {
     public static CloseableHttpClient SslHttpClientBuild(CookieStore cookieStore) {
         Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create().register("http", PlainConnectionSocketFactory.INSTANCE).register("https", trustAllHttpsCertificates()).build();
         PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
-        CloseableHttpClient httpClient = HttpClients.custom().setConnectionManager(connectionManager).build();
-//                .setKeepAliveStrategy(new DefaultConnectionKeepAliveStrategy())
-//                .setRedirectStrategy(new DefaultRedirectStrategy())
-//                .setDefaultCookieStore(cookieStore).setConnectionManager(connectionManager).build();
+        CloseableHttpClient httpClient = HttpClients.custom()
+                .setKeepAliveStrategy(new DefaultConnectionKeepAliveStrategy())
+                .setRedirectStrategy(new DefaultRedirectStrategy())
+                .setDefaultCookieStore(cookieStore).setConnectionManager(connectionManager).build();
         return httpClient;
     }
 
