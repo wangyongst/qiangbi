@@ -6,11 +6,6 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.util.Date;
-
 public class RefreshApi {
 
     public static Result getCode() throws Exception {
@@ -20,27 +15,10 @@ public class RefreshApi {
             result.setCode(httpResponse.getStatusLine().getStatusCode());
             return result;
         }
-        File fileDir = new File("C:\\imgs\\refresh");
-        if (!fileDir.exists()) {
-            fileDir.mkdirs();
-        }
-        File imgFile = new File("C:\\imgs\\refresh\\" + String.valueOf(new Date().getTime()) + ".png");
-        if (!imgFile.exists()) {
-            imgFile.createNewFile();
-        }
-        FileOutputStream output = new FileOutputStream(imgFile);
         HttpEntity entity = httpResponse.getEntity();
         if (entity != null && entity.getContentType().getValue().equals("image/png")) {
             result.setCode(1);
-            InputStream instream = entity.getContent();
-            byte b[] = new byte[1024];
-            int j = 0;
-            while ((j = instream.read(b)) != -1) {
-                output.write(b, 0, j);
-            }
-            output.flush();
-            output.close();
-            result.setFile(imgFile);
+            result.setInputStream(entity.getContent());
         } else {
             result.setCode(0);
         }
@@ -67,6 +45,7 @@ public class RefreshApi {
         } else {
             result.setCode(1);
             result.setOut(EntityUtils.toString(httpResponse.getEntity(), "UTF-8"));
+
         }
         return result;
     }

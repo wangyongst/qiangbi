@@ -54,7 +54,7 @@ public class ClearImageHelper {
             }
         }
 
-        // 矩阵打印
+         //矩阵打印
 //        for (int y = 0; y < h; y++) {
 //            for (int x = 0; x < w; x++) {
 //                if (isBlack(binaryBufferedImage.getRGB(x, y))) {
@@ -145,7 +145,6 @@ public class ClearImageHelper {
                 threshold = t;
             }
         }
-
         return threshold;
     }
 }

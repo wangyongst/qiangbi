@@ -5,9 +5,7 @@ import com.myweb.smvcip.utils.ClearImageHelper;
 import com.myweb.smvcip.utils.Result;
 import net.sourceforge.tess4j.ITesseract;
 import net.sourceforge.tess4j.Tesseract;
-import net.sourceforge.tess4j.util.ImageHelper;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 
 public class Refresh {
@@ -16,10 +14,8 @@ public class Refresh {
         Result result = RefreshApi.getCode();
         if (result.getCode() == 1) {
             ITesseract instance = new Tesseract();
-            BufferedImage bi = ImageIO.read(result.getFile());
-            BufferedImage textImage = ImageHelper.convertImageToGrayscale(ImageHelper.getSubImage(bi, 0, 0, bi.getWidth(), bi.getHeight()));
-            textImage = ImageHelper.convertImageToBinary(textImage);
-            textImage = ImageHelper.getScaledInstance(textImage, bi.getWidth() * 20, bi.getHeight() * 20);
+            BufferedImage textImage = ClearImageHelper.cleanImage(result.getInputStream());
+            result.getInputStream().close();
             String resstr2ult = instance.doOCR(textImage).trim();
             String str4nu = "";
             for (int t = 0; t < resstr2ult.length(); t++) {
@@ -33,9 +29,9 @@ public class Refresh {
             }
             result = RefreshApi.login(username, password, str4nu);
             if (result.getCode() == 1) {
-                if(result.getOut().contains("验证码不正确")){
+                if (result.getOut().contains("验证码不正确")) {
                     result.setCode(4);
-                }else if(result.getOut().contains("频繁登陆,请稍候重试")){
+                } else if (result.getOut().contains("频繁登陆,请稍候重试")) {
                     result.setCode(2);
                 }
                 return result;

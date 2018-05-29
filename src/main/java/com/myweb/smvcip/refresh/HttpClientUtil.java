@@ -160,8 +160,7 @@ public class HttpClientUtil {
         return httpClient;
     }
 
-    private static void setPostParams(HttpPost httpost,
-                                      Map<String, Object> params) {
+    private static void setPostParams(HttpPost httpost, Map<String, Object> params) {
         List<NameValuePair> nvps = new ArrayList<NameValuePair>();
         Set<String> keySet = params.keySet();
         for (String key : keySet) {
