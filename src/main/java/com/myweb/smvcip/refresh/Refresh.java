@@ -1,48 +1,22 @@
 package com.myweb.smvcip.refresh;
 
 
+import com.myweb.smvcip.utils.ClearImageHelper;
+import com.myweb.smvcip.utils.Result;
 import net.sourceforge.tess4j.ITesseract;
 import net.sourceforge.tess4j.Tesseract;
 import net.sourceforge.tess4j.util.ImageHelper;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.InputStream;
 
 public class Refresh {
-    private String username;
-    private RefreshApi refreshApi;
 
-    public Refresh(String username, String password, int i){
-        this.username = username;
-        try {
-            refreshApi = new RefreshApi(username, password, i);
-        } catch (Exception e) {
-            //e.printStackTrace();
-        }
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public int refresh() throws Exception {
-        String refresh = refreshApi.refresh();
-        if (refresh.length() == 3) return Integer.parseInt(refresh);
-        else if (refresh.contains("买入")) {
-            System.out.println(refresh);
-        } else if (refresh.contains("/index.php/login/logincl") && refresh.contains("请输入登陆账号")) {
-            return 3;
-        } else if (refresh.contains("频繁操作")) return 2;
-        return 1;
-    }
-
-    public int login() throws Exception {
-            InputStream imgInput = refreshApi.getCode();
-            if (imgInput == null) return 0;
+    public static Result login(String username, String password) throws Exception {
+        Result result = RefreshApi.getCode();
+        if (result.getCode() == 1) {
             ITesseract instance = new Tesseract();
-            BufferedImage bi = ImageIO.read(imgInput);
-            imgInput.close();
+            BufferedImage bi = ImageIO.read(result.getFile());
             BufferedImage textImage = ImageHelper.convertImageToGrayscale(ImageHelper.getSubImage(bi, 0, 0, bi.getWidth(), bi.getHeight()));
             textImage = ImageHelper.convertImageToBinary(textImage);
             textImage = ImageHelper.getScaledInstance(textImage, bi.getWidth() * 20, bi.getHeight() * 20);
@@ -53,12 +27,19 @@ public class Refresh {
                     str4nu += resstr2ult.charAt(t);
                 }
             }
-            if (str4nu.length() != 4) return 1;
-            String login = refreshApi.login(str4nu);
-            if (login.length() == 3) return Integer.parseInt(login);
-            if (login.contains("频繁登陆")) return 2;
-            else if (login.contains("验证码不正确")) return 3;
-            else System.out.println(login);
-            return 9;
+            if (str4nu.length() != 4) {
+                result.setCode(4);
+                return result;
+            }
+            result = RefreshApi.login(username, password, str4nu);
+            if (result.getCode() == 1) {
+                if(result.getOut().contains("验证码不正确")){
+                    result.setCode(4);
+                }else if(result.getOut().contains("频繁登陆,请稍候重试")){
+                    result.setCode(2);
+                }
+                return result;
+            } else return result;
+        } else return result;
     }
 }

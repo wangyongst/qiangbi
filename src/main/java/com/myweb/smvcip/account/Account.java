@@ -1,4 +1,4 @@
-package com.myweb.smvcip;
+package com.myweb.smvcip.account;
 
 import java.util.ArrayList;
 import java.util.HashMap;
