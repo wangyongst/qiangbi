@@ -5,6 +5,7 @@ import com.myweb.smvcip.account.Account;
 import com.myweb.smvcip.refresh.Refresh;
 import com.myweb.smvcip.refresh.RefreshApi;
 import com.myweb.smvcip.utils.Result;
+import com.myweb.smvcip.utils.Timer;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,9 +16,10 @@ public class QiangBi {
         while (true) {
             Result result = null;
             try {
+                Thread.sleep(200);
                 result = Refresh.login(username, password);
             } catch (Exception e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
             if(result.getCode() == 4){
                 System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + " 账号：" + username + " 验证码识别失败！");
@@ -44,7 +46,7 @@ public class QiangBi {
         try {
             result = RefreshApi.refresh();
         } catch (Exception e) {
-           e.printStackTrace();
+            //e.printStackTrace();
             return false;
         }
         if (result.getCode() == 1) {
@@ -52,6 +54,7 @@ public class QiangBi {
             System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + " 账号：" + username + " 刷新成功，用时 " + (end - start) + "ms");
             if(result.getOut().contains("买入")) {
                 System.out.println(result.getOut());
+                Timer.gotit = Timer.gotit + 1;
             }else if(result.getOut().contains("验证码")){
                 System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + " 账号：" + username + " 刷新失败，需重新登录");
                 Account.outLogined(username);

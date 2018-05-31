@@ -13,15 +13,14 @@ public class Account {
     private Account() {
         if (account == null) {
             accounts.put("zhiping9", "asdf123456");
-            accounts.put("zhiping9", "asdf123456");
             accounts.put("hongying8", "asdf123456");
             accounts.put("haiyan8", "asdf123456");
-//            accounts.put("hexiu8", "asdf123456");
-//            accounts.put("lingling9", "asdf123456");
-//            accounts.put("quanhai8", "asdf123456");
-//            accounts.put("quanhai6", "asdf123456");
-//            accounts.put("quanhai9", "asdf123456");
-//            accounts.put("jianlian8", "asdf123456");
+            accounts.put("hexiu8", "asdf123456");
+            accounts.put("lingling9", "asdf123456");
+            accounts.put("quanhai8", "asdf123456");
+            accounts.put("quanhai6", "asdf123456");
+            accounts.put("quanhai9", "asdf123456");
+            accounts.put("jianlian8", "asdf123456");
         }
     }
 
@@ -43,7 +42,7 @@ public class Account {
     }
 
     public static boolean outLogined(String username) {
-        getAccount().logined.remove(username);
+        getAccount().logined.put(username,false);
         return true;
     }
 }

@@ -169,7 +169,8 @@ public class HttpClientUtil {
         try {
             httpost.setEntity(new UrlEncodedFormEntity(nvps, "UTF-8"));
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            System.out.println("Post请求组装失败！");
+            // e.printStackTrace();
         }
     }
 
