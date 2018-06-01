@@ -1,7 +1,7 @@
 package com.myweb.smvcip;
 
 
-import com.myweb.smvcip.account.Account;
+import com.myweb.smvcip.account.Accounts;
 import com.myweb.smvcip.refresh.Refresh;
 import com.myweb.smvcip.refresh.RefreshApi;
 import com.myweb.smvcip.utils.Result;
@@ -28,7 +28,7 @@ public class QiangBi {
                 return false;
             } else if (result.getCode() == 1 || result.getCode() == 302) {
                 System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + " 账号：" + username + " 登录成功！");
-                Account.setLogined(username);
+                Accounts.setLogined(username);
                 return true;
             } else if(result.getCode() == 0){
                 System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + " 账号：" + username + " 获取验证码失败！");
@@ -44,7 +44,7 @@ public class QiangBi {
         Result result = null;
         long start = new Date().getTime();
         try {
-            result = RefreshApi.refresh();
+            result = RefreshApi.refresh(username);
         } catch (Exception e) {
             //e.printStackTrace();
             return false;
@@ -57,7 +57,7 @@ public class QiangBi {
                 Timer.gotit = Timer.gotit + 1;
             }else if(result.getOut().contains("验证码")){
                 System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + " 账号：" + username + " 刷新失败，需重新登录");
-                Account.outLogined(username);
+                Accounts.outLogined(username);
             }
             return true;
         } else if (result.getCode() == 403) {

@@ -8,9 +8,9 @@ import org.apache.http.util.EntityUtils;
 
 public class RefreshApi {
 
-    public static Result getCode() throws Exception {
+    public static Result getCode(String username) throws Exception {
         Result result = new Result();
-        HttpResponse httpResponse = HttpClientUtils.get("https://www.smcvip.com/index.php/login/verify");
+        HttpResponse httpResponse = HttpClientUtils.get("https://www.smcvip.com/index.php/login/verify", username);
         if (httpResponse.getStatusLine().getStatusCode() != 200) {
             result.setCode(httpResponse.getStatusLine().getStatusCode());
             return result;
@@ -37,9 +37,9 @@ public class RefreshApi {
         return result;
     }
 
-    public static Result refresh() throws Exception {
+    public static Result refresh(String username) throws Exception {
         Result result = new Result();
-        HttpResponse httpResponse = HttpClientUtils.get("https://www.smcvip.com/Works/IBOT");
+        HttpResponse httpResponse = HttpClientUtils.get("https://www.smcvip.com/Works/IBOT", username);
         if (httpResponse.getStatusLine().getStatusCode() != 200) {
             result.setCode(httpResponse.getStatusLine().getStatusCode());
         } else {

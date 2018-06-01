@@ -1,49 +1,49 @@
 package com.myweb.smvcip.account;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class Account {
-    private Map<String, String> accounts = new HashMap<>();
+    private String username;
+    private String password;
+    private boolean logined;
+    private String ip;
+    private int port;
 
-    private Map<String, Boolean> logined = new HashMap<>();
-
-    private static Account account = new Account();
-
-    private Account() {
-        if (account == null) {
-            accounts.put("zhiping9", "asdf123456");
-            accounts.put("hongying8", "asdf123456");
-            accounts.put("haiyan8", "asdf123456");
-            accounts.put("hexiu8", "asdf123456");
-            accounts.put("lingling9", "asdf123456");
-            accounts.put("quanhai8", "asdf123456");
-            accounts.put("quanhai6", "asdf123456");
-            accounts.put("quanhai9", "asdf123456");
-            accounts.put("jianlian8", "asdf123456");
-        }
+    public boolean isLogined() {
+        return logined;
     }
 
-    public static Account getAccount() {
-        return account;
+    public void setLogined(boolean logined) {
+        this.logined = logined;
     }
 
-    public static Map<String, String> getAccounts() {
-        return getAccount().accounts;
+    public String getUsername() {
+        return username;
     }
 
-    public static Map<String, Boolean> getLogined() {
-        return getAccount().logined;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public static boolean setLogined(String username) {
-        getAccount().logined.put(username, true);
-        return true;
+    public String getPassword() {
+        return password;
     }
 
-    public static boolean outLogined(String username) {
-        getAccount().logined.put(username,false);
-        return true;
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
     }
 }
-

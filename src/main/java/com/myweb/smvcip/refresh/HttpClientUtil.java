@@ -48,7 +48,7 @@ public class HttpClientUtil {
 
     private final static Object syncLock = new Object();
 
-    private static void config(HttpRequestBase httpRequestBase) {
+    private static void config(HttpRequestBase httpRequestBase,HttpHost proxy) {
         // 设置Header等
         // httpRequestBase.setHeader("User-Agent", "Mozilla/5.0");
         // httpRequestBase
@@ -60,9 +60,9 @@ public class HttpClientUtil {
         // "ISO-8859-1,utf-8,gbk,gb2312;q=0.7,*;q=0.7");
 
         // 配置请求的超时设置
-        RequestConfig requestConfig = RequestConfig.custom()
-                .setConnectionRequestTimeout(timeOut)
-                .setConnectTimeout(timeOut).setSocketTimeout(timeOut).build();
+        RequestConfig requestConfig = null;
+        if(proxy == null)  requestConfig = RequestConfig.custom().setConnectionRequestTimeout(timeOut).setConnectTimeout(timeOut).setSocketTimeout(timeOut).build();
+        else   requestConfig = RequestConfig.custom().setConnectionRequestTimeout(timeOut).setProxy(proxy).setConnectTimeout(timeOut).setSocketTimeout(timeOut).build();
         httpRequestBase.setConfig(requestConfig);
     }
 
@@ -142,8 +142,7 @@ public class HttpClientUtil {
                     return false;
                 }
 
-                HttpClientContext clientContext = HttpClientContext
-                        .adapt(context);
+                HttpClientContext clientContext = HttpClientContext                        .adapt(context);
                 HttpRequest request = clientContext.getRequest();
                 // 如果请求是幂等的，就再次尝试
                 if (!(request instanceof HttpEntityEnclosingRequest)) {
@@ -153,10 +152,7 @@ public class HttpClientUtil {
             }
         };
 
-        CloseableHttpClient httpClient = HttpClients.custom()
-                .setConnectionManager(cm)
-                .setRetryHandler(httpRequestRetryHandler).build();
-
+        CloseableHttpClient httpClient = HttpClients.custom().setConnectionManager(cm).setRetryHandler(httpRequestRetryHandler).build();
         return httpClient;
     }
 
@@ -183,17 +179,17 @@ public class HttpClientUtil {
      * @author SHANHY
      * @create 2015年12月18日
      */
-    public static HttpResponse post(String url, Map<String, Object> params) throws IOException {
+    public static HttpResponse post(String url, Map<String, Object> params,HttpHost proxy) throws IOException {
         HttpPost httppost = new HttpPost(url);
-        config(httppost);
+        config(httppost,proxy);
         setPostParams(httppost, params);
         return getHttpClient(url).execute(httppost, HttpClientContext.create());
 
     }
 
-    public static HttpResponse get(String url) throws IOException {
+    public static HttpResponse get(String url,HttpHost proxy) throws IOException {
         HttpGet httpget = new HttpGet(url);
-        config(httpget);
+        config(httpget,proxy);
         return getHttpClient(url).execute(httpget, HttpClientContext.create());
     }
 }

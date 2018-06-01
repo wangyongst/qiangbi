@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
 public class Refresh {
 
     public static Result login(String username, String password) throws Exception {
-        Result result = RefreshApi.getCode();
+        Result result = RefreshApi.getCode(username);
         if (result.getCode() == 1) {
             ITesseract instance = new Tesseract();
             BufferedImage textImage = ClearImageHelper.cleanImage(result.getInputStream());
