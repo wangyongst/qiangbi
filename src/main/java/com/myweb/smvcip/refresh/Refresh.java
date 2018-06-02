@@ -16,6 +16,7 @@ public class Refresh {
             ITesseract instance = new Tesseract();
             BufferedImage textImage = ClearImageHelper.cleanImage(result.getInputStream());
             result.getInputStream().close();
+            result.setInputStream(null);
             String resstr2ult = instance.doOCR(textImage).trim();
             String str4nu = "";
             for (int t = 0; t < resstr2ult.length(); t++) {

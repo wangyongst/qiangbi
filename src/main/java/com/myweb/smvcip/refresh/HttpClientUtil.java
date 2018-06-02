@@ -146,6 +146,7 @@ public class HttpClientUtil {
                 HttpRequest request = clientContext.getRequest();
                 // 如果请求是幂等的，就再次尝试
                 if (!(request instanceof HttpEntityEnclosingRequest)) {
+                    System.out.println("如果请求是幂等的，就再次尝试");
                     return true;
                 }
                 return false;

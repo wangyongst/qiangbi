@@ -25,17 +25,17 @@ public class Accounts {
         return true;
     }
 
-    public static Map<String, Boolean> getLogined() {
-        return getAccount().logined;
-    }
-
     public static boolean setLogined(String username) {
-        getAccount().logined.put(username, true);
+        Account acc = getAccount().accounts.get(username);
+        acc.setLogined(true);
+        getAccount().accounts.put(username,acc);
         return true;
     }
 
     public static boolean outLogined(String username) {
-        getAccount().logined.put(username, false);
+        Account acc = getAccount().accounts.get(username);
+        acc.setLogined(false);
+        getAccount().accounts.put(username,acc);
         return true;
     }
 }

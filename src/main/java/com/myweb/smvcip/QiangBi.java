@@ -16,10 +16,10 @@ public class QiangBi {
         while (true) {
             Result result = null;
             try {
-                Thread.sleep(200);
                 result = Refresh.login(username, password);
             } catch (Exception e) {
                 //e.printStackTrace();
+                continue;
             }
             if(result.getCode() == 4){
                 System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + " 账号：" + username + " 验证码识别失败！");

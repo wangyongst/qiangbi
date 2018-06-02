@@ -1,5 +1,7 @@
 package com.myweb.smvcip.account;
 
+import com.myweb.smvcip.utils.Timer;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -51,5 +53,22 @@ public class Test {
         server2.setPort(8888);
         servers.add(server2);
         return servers;
+    }
+
+    public static void makeAccount() {
+        Timer count = new Timer();
+        count.setCount(0);
+        final List<Server> servers = Test.getServer();
+        Test.getUNAPW().forEach((k, v) -> {
+            Account account = new Account();
+            account.setUsername(k);
+            account.setPassword(v);
+            account.setIp(servers.get(count.getCount()).getIp());
+            account.setPort(servers.get(count.getCount()).getPort());
+            account.setLogined(false);
+            Accounts.putAccounts(account);
+            count.setCount(count.getCount() + 1);
+            if (count.getCount() > 1) count.setCount(0);
+        });
     }
 }
