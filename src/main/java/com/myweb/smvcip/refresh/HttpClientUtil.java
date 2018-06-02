@@ -114,34 +114,33 @@ public class HttpClientUtil {
         HttpRequestRetryHandler httpRequestRetryHandler = new HttpRequestRetryHandler() {
             public boolean retryRequest(IOException exception, int executionCount, HttpContext context) {
                 if (executionCount >= 5) {// 如果已经重试了5次，就放弃
-                    System.out.println("如果已经重试了5次，就放弃");
+                    System.out.println("连接重试5次失败，放弃连接");
                     return false;
                 }
                 if (exception instanceof NoHttpResponseException) {// 如果服务器丢掉了连接，那么就重试
-                    System.out.println("如果服务器丢掉了连接，那么就重试");
+                    System.out.println("对方丢失连接，程序自动重试");
                     return true;
                 }
                 if (exception instanceof SSLHandshakeException) {// 不要重试SSL握手异常
-                    System.out.println("不要重试SSL握手异常");
+                    System.out.println("SSL握手异常，放弃连接");
                     return false;
                 }
                 if (exception instanceof InterruptedIOException) {// 超时
-                    System.out.println("超时");
+                    System.out.println("连接被拒绝，放弃连接");
                     return false;
                 }
                 if (exception instanceof UnknownHostException) {// 目标服务器不可达
-                    System.out.println("目标服务器不可达");
+                    System.out.println("目标服务器不可达，放弃连接");
                     return false;
                 }
                 if (exception instanceof ConnectTimeoutException) {// 连接被拒绝
-                    System.out.println("连接被拒绝");
+                    System.out.println("请求超时，放弃连接");
                     return false;
                 }
                 if (exception instanceof SSLException) {// SSL握手异常
-                    System.out.println("SSL握手异常");
+                    System.out.println("SSL连接失败，放弃连接");
                     return false;
                 }
-
                 HttpClientContext clientContext = HttpClientContext                        .adapt(context);
                 HttpRequest request = clientContext.getRequest();
                 // 如果请求是幂等的，就再次尝试
