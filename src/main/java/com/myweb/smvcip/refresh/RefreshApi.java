@@ -49,4 +49,15 @@ public class RefreshApi {
         }
         return result;
     }
+
+    public static void buy(String username,String url) throws Exception {
+        Result result = new Result();
+        HttpResponse httpResponse = HttpClientUtils.get(url, username);
+        if (httpResponse.getStatusLine().getStatusCode() != 200) {
+            System.out.println("买入失败，失败原因：" + httpResponse.getStatusLine().getStatusCode());
+        } else {
+            System.out.println("开始买入：");
+            EntityUtils.toString(httpResponse.getEntity(), "UTF-8");
+        }
+    }
 }

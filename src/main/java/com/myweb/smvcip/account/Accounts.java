@@ -6,6 +6,8 @@ import java.util.Map;
 public class Accounts {
     private Map<String, Account> accounts = new HashMap<>();
 
+    public static String MAINACCOUNT = "zsheng7";
+
     private static Accounts account = new Accounts();
 
     public static Accounts getAccount() {

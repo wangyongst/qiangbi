@@ -15,15 +15,14 @@ import java.util.Map;
  */
 public class HttpClientUtils {
     public static HttpResponse get(String url,String username) throws IOException {
-        HttpHost proxy = new HttpHost(Accounts.getAccount(username).getIp(),Accounts.getAccount(username).getPort());
+        HttpHost proxy = new HttpHost(Accounts.getAccounts().get(username).getIp(),Accounts.getAccounts().get(username).getPort());
         return HttpClientUtil.get(url,proxy);
     }
 
     public static HttpResponse login(String username, String password, String code) throws IOException {
-        HttpHost proxy = new HttpHost(Accounts.getAccount(username).getIp(),Accounts.getAccount(username).getPort());
+        HttpHost proxy = new HttpHost(Accounts.getAccounts().get(username).getIp(),Accounts.getAccounts().get(username).getPort());
         return HttpClientUtil.post("https://www.smcvip.com/index.php/login/logincl", loginMap(username, password, code),proxy);
     }
-
 
     public static Map loginMap(String username, String password, String code) {
         Map<String, String> createMap = new HashMap<String, String>();

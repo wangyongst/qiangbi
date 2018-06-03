@@ -10,31 +10,19 @@ import com.myweb.smvcip.utils.Timer;
 import java.util.List;
 
 public class Start {
-    public static final int SLEEP = 60;
-    public static final int MAX_THREAD = 1;
-
-
     public static void main(String[] args) {
-
         Test.makeAccount();
-
-        Timer timer = new Timer();
-        while (timer.getCount() < MAX_THREAD) {
+        while (true) {
             Accounts.getAccounts().forEach((k,v) -> {
                 try {
-                    Thread.sleep(Start.SLEEP);
-                    System.out.println(Timer.gotit);
+                    Thread.sleep(30000/Accounts.getAccounts().size()/Test.getServer().size());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 if (!v.isLogined()) {
-                    timer.setCount(timer.getCount() + 1);
                    QiangBi.login(k,v.getPassword());
-                    timer.setCount(timer.getCount() - 1);
                 } else {
-                    timer.setCount(timer.getCount() + 1);
                     QiangBi.refresh(k);
-                    timer.setCount(timer.getCount() -1);
                 }
             });
         }
