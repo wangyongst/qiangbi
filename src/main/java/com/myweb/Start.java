@@ -15,7 +15,7 @@ public class Start {
         while (true) {
             Accounts.getAccounts().forEach((k,v) -> {
                 try {
-                    Thread.sleep(30000/Accounts.getAccounts().size()/Test.getServer().size());
+                    Thread.sleep(60000/Accounts.getAccounts().size());///Test.getServer().size());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

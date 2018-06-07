@@ -2,6 +2,7 @@ package com.myweb.smvcip;
 
 
 import com.myweb.smvcip.account.Accounts;
+import com.myweb.smvcip.account.Test;
 import com.myweb.smvcip.refresh.Refresh;
 import com.myweb.smvcip.refresh.RefreshApi;
 import com.myweb.smvcip.utils.Result;
@@ -16,18 +17,16 @@ import java.util.Date;
 
 public class QiangBi {
 
-    public static boolean
-    login(String username, String password){
-        while (true) {
+    public static boolean login(String username, String password){
             Result result = null;
             try {
                 result = Refresh.login(username, password);
             } catch (Exception e) {
-                //e.printStackTrace();
-                continue;
+                return false;
             }
             if(result.getCode() == 4){
                 System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + " IP:" + Accounts.getAccounts().get(username).getIp() + " 账号：" + username + " 验证码识别失败！");
+                return false;
             }else if (result.getCode() == 403) {
                 System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + " IP:" + Accounts.getAccounts().get(username).getIp() + " 账号：" + username + " 登录失败，很可能是本机IP已经被禁，请为本机更换IP！");
                 return false;
@@ -37,12 +36,15 @@ public class QiangBi {
                 return true;
             } else if(result.getCode() == 0){
                 System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + " IP:" + Accounts.getAccounts().get(username).getIp() + " 账号：" + username + " 获取验证码失败！");
+                return false;
             }else if(result.getCode() == 2){
                 System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) + " IP:" + Accounts.getAccounts().get(username).getIp() + " 账号：" + username + " 频繁操作！");
                 return false;
             }
-            else System.out.println(result.getCode());
-        }
+            else {
+                System.out.println(result.getCode());
+                return false;
+            }
     }
 
     public static boolean refresh(String username) {
@@ -51,7 +53,6 @@ public class QiangBi {
         try {
             result = RefreshApi.refresh(username);
         } catch (Exception e) {
-            //e.printStackTrace();
             return false;
         }
         if (result.getCode() == 1) {
@@ -64,15 +65,14 @@ public class QiangBi {
                     try {
                         RefreshApi.buy(Accounts.MAINACCOUNT,e.attr("href"));
                     } catch (Exception e1) {
-
                     }
                 });
                 Timer.gotit = Timer.gotit + 1;
             }else if(result.getOut().contains("验证码")){
                 System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) +  " IP:" + Accounts.getAccounts().get(username).getIp() + " 账号：" + username + " 刷新失败，需重新登录");
                 Accounts.outLogined(username);
+                return false;
             }
-            return true;
         } else if (result.getCode() == 403) {
             System.out.println(new SimpleDateFormat("HH:mm:ss").format(new Date()) +  " IP:" + Accounts.getAccounts().get(username).getIp() + " 账号：" + username + " 刷新失败，很可能是本机IP已经被禁，请为本机更换IP！");
             return false;

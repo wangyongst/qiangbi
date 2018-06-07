@@ -1,6 +1,7 @@
 package com.myweb.smvcip.refresh;
 
 
+import com.myweb.smvcip.account.Accounts;
 import com.myweb.smvcip.utils.ClearImageHelper;
 import com.myweb.smvcip.utils.Result;
 import net.sourceforge.tess4j.ITesseract;
@@ -12,6 +13,11 @@ public class Refresh {
 
     public static Result login(String username, String password) throws Exception {
         Result result = RefreshApi.getCode(username);
+        try {
+            Thread.sleep(60000/ Accounts.getAccounts().size());///Test.getServer().size());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         if (result.getCode() == 1) {
             ITesseract instance = new Tesseract();
             BufferedImage textImage = ClearImageHelper.cleanImage(result.getInputStream());

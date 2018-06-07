@@ -64,7 +64,7 @@ public class Test {
         server.setPort(8888);
         servers.add(server);
         Server server2 = new Server();
-        server2.setIp("128.14.227.3");
+        server2.setIp("103.98.17.216");
         server2.setPort(8888);
         servers.add(server2);
         return servers;
